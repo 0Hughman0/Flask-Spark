@@ -1,15 +1,13 @@
 # Flask Spark
-### Bring together dynamic and static sites driven by Flask
+### Bridging the gap between static and dynamic flavoured flask apps
 
-Flask spark aims to make it easier to build a flask site with static pages integrated.
+Flask Spark aims to make it easier to add static content to a flask app. To do this, it makes the powerful Jinja2
+templating engine available to static templates outside of your regular flask app called `Pages`.
 
-It allows the flask templating engine to be used to render static templates.
+To build up the structure of your static site you simply have to fill up your `pages` directory with templates in the
+structure of your static site.
 
-It also provides an erm... novel way of defining the structure of your static site.
-
-Flask spark tries to give you good value per line!
-
-Creating your static site structure is as simple as filling a directory tree:
+E.g:
 
     pages
     │   about.html
@@ -19,7 +17,10 @@ Creating your static site structure is as simple as filling a directory tree:
             info1.html
            __init__.py
 
-To make flask_spark aware of your structure the top level `pages/__init__.py` contains:
+Your `pages` folder actually acts like a Python package which makes it easier to integrate with your
+dynamic application. Your `pages` package simply needs a few configuration lines to tell Flask-Spark how to
+render your templates. In your top level `__init__.py` file, you create a `Root` object, that all of your `Page` objects
+are created from (In the background this allows Flask Spark to work out the structure of your website).
 
     from spark import Root
     from flask import current_app
@@ -29,11 +30,9 @@ To make flask_spark aware of your structure the top level `pages/__init__.py` co
 
     __root__ = root
 
-    from .info import *
+    from .info import * # this looks a bit strange, but it just makes sure pages in directories below are added!
 
-(Note that you can access the current app, and use it to fill in your templates!)
-
-and `pages/info/__init__.py` contains:
+For any levels below `root`, you build up that submount in a similar way, by creating `Folder` objects:
 
     from .. import root
 
@@ -50,14 +49,17 @@ Then simply initialise your app with:
 
     spark = init_app(app)
 
-This then allows you to run the cli command `spark_render`:
+Behind the scenes this does a bit of work that ultimately allows you to run the cli command `spark_render`:
 
     ..\my_app$ flask spark_render
 
-which re-renders all templates from `pages`, and writes them to a configured directory.
+This command then renders, each page in `pages` using flask's own `render_template` method. Finally these html documents
+get written to an output folder, ready to be served up.
 
-flask spark also knows how to render markdown articles, and makes a bit of effort to ensure Jinja flow control such as
-`{% for i in range(10) %}` and {% extends 'master.html' %} still works!
+## Additional features:
 
-flask spark also allows you to use `url_for` within your static templates. Additionally it provides a `spark_url`
-context processor, which lets you easily reference static pages within both static and app templates.
+* Builtin `MarkdownPage` type that can render markdown templates. Additionally, flask spark makes a bit of effort to
+ensure Jinja flow control such as `{% for i in range(10) %}` and `{% extends 'master.html' %}` still works!
+* Use of `url_for` within your static templates is maintained, making it easy to link to your dynamic site.
+* Additionally a `spark_url` context processor is provided, which emulates `url_for`'s behaviour, but builds urls for
+content within the static site. (`spark_url` can also be used within the dynamic application).
