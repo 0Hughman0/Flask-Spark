@@ -1,5 +1,6 @@
 from flask import Flask
 
+from pathlib import Path
 import sys
 sys.path.append(Path().absolute().parent.as_posix())
 from spark import init_app
