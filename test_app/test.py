@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 
 from pathlib import Path
 import sys
@@ -9,13 +9,13 @@ app = Flask(__name__)
 app.config['SERVER_NAME'] = '127.0.0.1:5000'
 
 
-@app.route('/extra')
+@app.route('/')
 def extra():
-    return "hmmm"
+    return render_template('extra.html')
+
 
 s = init_app(app)
 
 with app.app_context():
+    s.load_pages()
     s.render_pages()
-
-

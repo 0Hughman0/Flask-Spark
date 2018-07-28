@@ -1,6 +1,5 @@
-from spark import SubDomain
+from ... import root
+from flask import current_app
 
-folder = SubDomain(__file__)
+folder = root.Folder(__file__)
 two = folder.Page('err.html')
-
-__subdomain__ = folder

@@ -1,7 +1,11 @@
-from spark import SubDomain
+from spark import Root
+from flask import current_app
 
-folder = SubDomain(__file__)
-home = folder.Page('home.html')
-about = folder.Page('about.html')
+root = Root(__file__)
+home = root.Home('home.html')
+about = root.Page('about.html', render_kwargs={'app_name': current_app.name})
 
-__subdomain__ = folder
+__root__ = root
+
+from .posts import *
+from .posts.new import *
