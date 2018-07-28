@@ -1,5 +1,8 @@
-about
-{{ url_for('extra')}}
-{{ folder.file('test') }}
-{{ spark_url('err') }}
-{{ spark_url('pages', filename='t.py') }}
+{% extends 'master.html' %}
+{% block body %}
+<p>about</p>
+<a href="{{ url_for('extra')}}">extra</a>
+<a href="{{ spark_url('err') }}">err</a>
+<a href="{{ spark_url('root', filename='t.py') }}">root t.py</a>
+<a>{{ app_name }}</a>
+{% endblock %}
