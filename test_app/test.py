@@ -1,7 +1,7 @@
 from flask import Flask
 
 import sys
-sys.path.append(r"D:\Documents\Programin\WorkingVersions\flask_spark\flask_spark")
+sys.path.append(Path().absolute().parent.as_posix())
 from spark import init_app
 
 app = Flask(__name__)
